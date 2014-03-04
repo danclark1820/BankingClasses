@@ -33,7 +33,6 @@ end
 # {"Date"=>"10/2/2013", "Amount"=>-29.99, "Description"=>"Amazon.com", "Account"=>"Business Checking"}
 # ]
 
-transactions_array = []
 
 # balances = [
 # {"Account"=>"Business Checking",  "Balance"=>4010.0},
@@ -64,11 +63,12 @@ class BankTransaction
   end
 
   def summary
-    puts "Date: #{@date}, Amount: #{@amount}, Description: #{@description}, Account: #{@account}"
+    "Date: #{@date}, Amount: #{@amount}, Description: #{@description}, Account: #{@account}"
   end
 
 end
 
+transactions_array = []
 bank_data.each do |trans|
   transactions_array << BankTransaction.new(trans)
 end
@@ -79,28 +79,31 @@ class BankAccount
 
   attr_reader :starting_bal, :account , :ending_bal
 
-
   def initialize(hash, account, description)
-    @starting_bal = hash["Balance"]
-    @account = BankTransaction.account
-    @ending_bal = hash["Balance"]
-    @description = BankTransaction.description
+    @starting_balance = hash["Balance"]
+    @account = account
+    @ending_balance= hash["Balance"]
+    @description = description
   end
 
-  def starting_balance()
-
+  def starting_balance
+    @starting_balance
   end
 
   def ending_balance
-
+    @ending_balance += @starting_balance
   end
 
-  def summary
-
+  def summary(hash)
+    summaries = []
+    hash.each do |trans|
+      summaries << trans.summary
+    end
+    summaries
   end
 end
-binding.pry
 
 ba = BankAccount.new(balances[0], transactions_array[0].account, transactions_array[0].description)
-puts ba
+ba.summary
 
+binding.pry
