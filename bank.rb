@@ -41,7 +41,7 @@ end
 
 class BankTransaction
 
-  attr_reader :date, :amount, :description, :account
+  attr_reader :date, :amount, :description, :account,
 
   def initialize(hash)
     @date = hash["Date"]
@@ -50,20 +50,16 @@ class BankTransaction
     @account = hash["Account"]
   end
 
-  def debit?
-    if @amount > 0
-      true
-    end
-  end
-
-  def credit?
-    if @amount < 0
-      true
+  def credit_or_debit
+    if amount > 0
+      @amount_type = "credit"
+    else
+      @amount "debit"
     end
   end
 
   def summary
-    "Date: #{@date}, Amount: #{@amount}, Description: #{@description}, Account: #{@account}"
+    "#{@amount.abs} #{@amount_type} #{date} - #{@description}"
   end
 
 end
@@ -94,16 +90,13 @@ class BankAccount
     @ending_balance += @starting_balance
   end
 
-  def summary(hash)
-    summaries = []
-    hash.each do |trans|
-      summaries << trans.summary
-    end
-    summaries
-  end
+  # def summary
+  #   summaries = []
+  #   transactions_array.each do |trans|
+  #     summaries << trans.summary
+  #   end
+  #   summaries
+  # end
 end
 
-ba = BankAccount.new(balances[0], transactions_array[0].account, transactions_array[0].description)
-ba.summary
 
-binding.pry
